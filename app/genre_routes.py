@@ -1,5 +1,7 @@
 from app import db
-from book_routes import validate_model
+from app.models.genre import Genre
+from app.models.book import Book
+from .book_routes import validate_model
 from flask import Blueprint, abort, make_response, request, jsonify
 
 genre_bp = Blueprint("genre_bp", __name__, url_prefix = "/genres")

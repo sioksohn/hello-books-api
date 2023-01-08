@@ -19,9 +19,8 @@ class Book(db.Model):
             book_dict["author"] = self.author.name
 
         if self.genres:
-            genre_names = [genre.name for genre in self.genres]
-            book_dict["genres"] = genre_names
-            
+            book_dict["genres"] = [genre.name for genre in self.genres]
+
         return book_dict
     
     @classmethod    
