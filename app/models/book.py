@@ -7,3 +7,20 @@ class Book(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     author = db.relationship("Author", back_populates="books")
 
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "title": self.title,
+            "description": self.description,
+            "author_name": self.author.name
+        }
+    
+    @classmethod    
+    def from_dict(cls, book_data):
+        new_book = cls(
+            title = book_data["title"],
+            description = book_data["description"],
+        )
+
+        return new_book
+        
