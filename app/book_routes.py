@@ -5,24 +5,23 @@ from flask import Blueprint, jsonify, abort, make_response, request
 
 books_bp = Blueprint("books_bp", __name__, url_prefix="/books")
 
-def validate_book(book_id):
+def validate_model(cls, model_id):
     try:
-        book_id = int(book_id)
+        model_id = int(model_id)
     except:
-        abort(make_response({"message":f"book {book_id} invalid"}, 400))
+        abort(make_response({"message":f"book {model_id} invalid"}, 400))
 
-    book = Book.query.get(book_id)
+    model = cls.query.get(model_id)
 
-    if not book:
-        abort(make_response({"message":f"book {book_id} not found"}, 404))
-
-    return book
+    if model:
+        return model
+    
+    abort(make_response({"message":f"book {model_id} not found"}, 404))
 
 @books_bp.route("", methods=["POST"])
 def create_book():
     request_body = request.get_json()
-    new_book = Book(title=request_body["title"],
-                    description=request_body["description"])
+    new_book = Book.from_dict(request_body)
 
     db.session.add(new_book)
     db.session.commit()
@@ -40,23 +39,13 @@ def read_all_books():
 
     books_response = []
     for book in books:
-        books_response.append(
-            {
-                "id": book.id,
-                "title": book.title,
-                "description": book.description
-            }
-        )
+        books_response.append(book.to_dict())
     return jsonify(books_response)
 
 @books_bp.route("/<book_id>", methods=["GET"])
 def read_one_book(book_id):
     book = validate_book(book_id)
-    return {
-            "id": book.id,
-            "title": book.title,
-            "description": book.description
-        }
+    return book.to_dict()
 
 @books_bp.route("/<book_id>", methods=["PUT"])
 def update_book(book_id):
