@@ -8,8 +8,7 @@ class Author(db.Model):
     def to_dict(self):
         author_dict = {
             "id": self.id,
-            "name": self.name,
-            "books": self.books
+            "name": self.name
         }
         author_dict["books"] = [book.title for book in self.books]
 
