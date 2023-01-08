@@ -12,7 +12,6 @@ class Book(db.Model):
             "id" : self.id,
             "title": self.title,
             "description": self.description,
-            "author_name": self.author.name
         }
     
     @classmethod    
